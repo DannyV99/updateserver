@@ -1,0 +1,19 @@
+---
+  - name: Simple Update Playbook
+    hosts: all
+    tasks:
+      - name: Update all packages
+        yum:
+          name: '*'
+          state: latest
+          update_cache: yes
+          update_only: yes
+        register: update_output
+
+      - name: Remove unnecessary packages
+        yum:
+          autoremove: yes
+
+      - name: Reboot when packages were updated
+        reboot:
+        when: update_output.changed
